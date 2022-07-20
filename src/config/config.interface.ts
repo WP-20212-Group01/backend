@@ -3,5 +3,7 @@ export interface ConfigInterface {
 
   PORT: string;
 
+  SWAGGER_TARGET_SERVER_URL: string;
+
   MONGODB_CONNECTION_STRING: string;
 }

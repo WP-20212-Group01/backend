@@ -30,9 +30,12 @@ async function bootstrap() {
   const swaggerDocBuilder = new DocumentBuilder()
     .setTitle('Candle shop')
     .setDescription('Candle shop API')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, swaggerDocBuilder);
+    .setVersion('1.0');
+
+  const serverUrl = configService.get('SWAGGER_TARGET_SERVER_URL');
+  if (serverUrl) swaggerDocBuilder.addServer(serverUrl);
+
+  const document = SwaggerModule.createDocument(app, swaggerDocBuilder.build());
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(+(configService.get('PORT') || '3000'));
