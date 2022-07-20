@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -18,6 +19,13 @@ async function bootstrap() {
 
   const env = configService.get('NODE_ENV') || 'development';
   if (env !== 'production') app.enableCors();
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      forbidNonWhitelisted: true,
+      whitelist: true,
+    }),
+  );
 
   const swaggerDocBuilder = new DocumentBuilder()
     .setTitle('Candle shop')

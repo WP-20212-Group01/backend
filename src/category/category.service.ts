@@ -8,4 +8,8 @@ export class CategoryService {
   async getAllCategories() {
     return this.categoryRepository.getAllCategories();
   }
+
+  async getCategoriesBySlugs(slugs: string[]) {
+    return this.categoryRepository.getCategroiesBySlugs(slugs);
+  }
 }

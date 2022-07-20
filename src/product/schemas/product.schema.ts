@@ -1,8 +1,11 @@
-import { prop } from '@typegoose/typegoose';
+import { ApiProperty } from '@nestjs/swagger';
+import { prop, Ref } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
+import { Category } from '../../category/schemas/category.schema';
 import { ProductStatus } from '../enums/product-status.enum';
 
 export class Product {
+  @ApiProperty({ type: String })
   _id: Types.ObjectId;
 
   @prop()
@@ -15,8 +18,8 @@ export class Product {
   stock: number;
 
   // TODO: Use ref to Category
-  @prop({ type: Types.ObjectId })
-  category: Types.ObjectId;
+  @prop({ ref: () => Category, type: Types.ObjectId })
+  category: Ref<Category, Types.ObjectId>;
 
   @prop({ enum: ProductStatus })
   status: ProductStatus;

@@ -12,4 +12,14 @@ export class CategoryRepository {
   async getAllCategories(): Promise<Category[]> {
     return this.categoryModel.find().lean().exec();
   }
+
+  async getCategroiesBySlugs(slugs: string[]): Promise<Category[]> {
+    return this.categoryModel
+      .find({ slug: { $in: slugs } })
+      .select({
+        _id: 1,
+      })
+      .lean()
+      .exec();
+  }
 }
