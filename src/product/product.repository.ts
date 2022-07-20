@@ -41,7 +41,9 @@ export class ProductRepository {
       data: [
         {
           $skip: (page - 1) * limit,
-          limit,
+        },
+        {
+          $limit: limit,
         },
       ],
     });
