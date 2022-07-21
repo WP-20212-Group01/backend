@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
+import { CreateCommentDto } from './dtos/create-comment.dto';
 import { GetCommentDto } from './dtos/get-comment.dto';
 import { Comment } from './schemas/comment.schema';
 
@@ -22,5 +23,11 @@ export class CommentRepository {
       .limit(pageSize)
       .lean()
       .exec();
+  }
+
+  async createComment(createCommentDto: CreateCommentDto) {
+    return this.commentModel.create({
+      ...createCommentDto,
+    });
   }
 }

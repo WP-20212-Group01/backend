@@ -8,12 +8,17 @@ export class Comment {
   _id: Types.ObjectId;
 
   @ApiProperty({ type: String })
-  @prop({ ref: () => Product, type: Types.ObjectId, index: true })
+  @prop({
+    required: true,
+    ref: () => Product,
+    type: Types.ObjectId,
+    index: true,
+  })
   product: Ref<Product>;
 
-  @prop()
+  @prop({ required: true })
   name: string;
 
-  @prop()
+  @prop({ required: true })
   comment: string;
 }
