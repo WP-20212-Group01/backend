@@ -8,7 +8,7 @@ export class Comment {
   _id: Types.ObjectId;
 
   @ApiProperty({ type: String })
-  @prop({ ref: () => Product, type: Types.ObjectId })
+  @prop({ ref: () => Product, type: Types.ObjectId, index: true })
   product: Ref<Product>;
 
   @prop()
