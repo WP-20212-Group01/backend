@@ -28,4 +28,8 @@ export class ProductService {
   async getProductById(id: string) {
     return this.productRepository.getProductById(id);
   }
+
+  async getProductsByIdList(idList: string[]) {
+    return this.productRepository.getProductsByIdList(idList);
+  }
 }

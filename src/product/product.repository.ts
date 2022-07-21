@@ -59,4 +59,13 @@ export class ProductRepository {
   async getProductById(id: string): Promise<Product> {
     return this.productModel.findById(id).lean().exec();
   }
+
+  async getProductsByIdList(idList: string[]): Promise<Product[]> {
+    return this.productModel
+      .find({
+        _id: { $in: idList.map((id) => new Types.ObjectId(id)) },
+      })
+      .lean()
+      .exec();
+  }
 }
