@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
+import { Category } from 'src/category/schemas/category.schema';
 import { ProductFilterDto } from './dtos/product-filter.dto';
 import { Product } from './schemas/product.schema';
 
@@ -9,6 +10,8 @@ export class ProductRepository {
   constructor(
     @Inject(Product)
     private readonly productModel: ReturnModelType<typeof Product>,
+    @Inject(Category)
+    private readonly categoryModel: ReturnModelType<typeof Category>,
   ) {}
 
   async getProductsByFilter(
@@ -44,6 +47,17 @@ export class ProductRepository {
         },
         {
           $limit: limit,
+        },
+        {
+          $lookup: {
+            from: this.categoryModel.collection.collectionName,
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category',
+          },
+        },
+        {
+          $unwind: '$category',
         },
       ],
     });
