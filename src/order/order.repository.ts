@@ -38,8 +38,20 @@ export class OrderRepository {
       .exec();
   }
 
-  async getOrderById(orderId: string): Promise<Order> {
-    return this.orderModel.findById(orderId).exec();
+  async getOrderById(orderId: string) {
+    return this.orderModel
+      .findById(orderId)
+      .populate({
+        path: 'products',
+        populate: {
+          path: 'product',
+          select: {
+            name: 1,
+            price: 1,
+          },
+        },
+      })
+      .exec();
   }
 
   async updateOrder(
