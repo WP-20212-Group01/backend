@@ -33,7 +33,19 @@ export class OrderRepository {
     const { page, limit } = getOrderDto;
     return this.orderModel
       .find()
+      .sort({ _id: -1 })
       .skip((page - 1) * limit)
+      .populate({
+        path: 'products',
+        populate: {
+          path: 'product',
+          select: {
+            name: 1,
+            price: 1,
+            image: 1,
+          },
+        },
+      })
       .limit(limit)
       .exec();
   }
@@ -48,6 +60,7 @@ export class OrderRepository {
           select: {
             name: 1,
             price: 1,
+            image: 1,
           },
         },
       })
