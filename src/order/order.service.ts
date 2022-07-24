@@ -3,6 +3,7 @@ import { ProductService } from '../product/product.service';
 import { CreateOrderDto } from './dtos/create-order.dto';
 import { GetOrderDto } from './dtos/get-order.dto';
 import { UpdateOrderDto } from './dtos/update-order.dto';
+import { OrderStatus } from './enums/order-status.enum';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -50,6 +51,17 @@ export class OrderService {
   }
 
   async updateOrder(orderId: string, updateOrderDto: UpdateOrderDto) {
-    return this.orderRepository.updateOrder(orderId, updateOrderDto);
+    try {
+      const { status } = updateOrderDto;
+      if (status === OrderStatus.COMPLETED) {
+        const order = await this.getOrderById(orderId);
+        if (!order) throw new Error(`No order with ID ${orderId}`);
+
+        await this.productService.consumeProductStock(order.products);
+      }
+      return this.orderRepository.updateOrder(orderId, updateOrderDto);
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
   }
 }

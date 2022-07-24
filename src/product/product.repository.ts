@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { Types } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { Category } from '../category/schemas/category.schema';
+import { MONGODB_CONNECTION } from '../database/database.constants';
+import { OrderProduct } from '../order/schemas/order-product.schema';
 import { AddProductDto } from './dtos/add-product.dto';
 import { ProductFilterDto } from './dtos/product-filter.dto';
 import { Product } from './schemas/product.schema';
@@ -13,6 +15,8 @@ export class ProductRepository {
     private readonly productModel: ReturnModelType<typeof Product>,
     @Inject(Category)
     private readonly categoryModel: ReturnModelType<typeof Category>,
+    @Inject(MONGODB_CONNECTION)
+    private readonly mongoConnection: Connection,
   ) {}
 
   async getProductsByFilter(
@@ -92,5 +96,37 @@ export class ProductRepository {
       ...addProductDto,
       category,
     });
+  }
+
+  async consumeProductStock(orderedProducts: OrderProduct[]) {
+    const session = await this.mongoConnection.startSession();
+
+    session.startTransaction();
+
+    try {
+      orderedProducts.forEach(async (orderedProduct) => {
+        const { product, quantity } = orderedProduct;
+
+        const updated = await this.productModel.findOneAndUpdate(
+          {
+            _id: product as Types.ObjectId,
+            stock: { $gte: quantity },
+          },
+          {
+            $inc: { stock: -quantity },
+          },
+          {
+            new: true,
+          },
+        );
+
+        if (!updated) throw new Error(`No product or out of stock: ${product}`);
+      });
+    } catch (e) {
+      await session.abortTransaction();
+      throw e;
+    } finally {
+      await session.endSession();
+    }
   }
 }

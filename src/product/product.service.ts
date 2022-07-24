@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CategoryService } from '../category/category.service';
+import { OrderProduct } from '../order/schemas/order-product.schema';
 import { AddProductDto } from './dtos/add-product.dto';
 import { ProductFilterDto } from './dtos/product-filter.dto';
 import { ProductRepository } from './product.repository';
@@ -46,5 +47,9 @@ export class ProductService {
       addProductDto,
       categoryList[0]._id,
     );
+  }
+
+  async consumeProductStock(orderedProducts: OrderProduct[]) {
+    return this.productRepository.consumeProductStock(orderedProducts);
   }
 }
