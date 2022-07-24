@@ -19,6 +19,7 @@ export class CommentRepository {
       .find({
         product: new Types.ObjectId(productId),
       })
+      .sort({ _id: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .lean()
