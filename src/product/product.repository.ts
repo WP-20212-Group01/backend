@@ -104,24 +104,29 @@ export class ProductRepository {
     session.startTransaction();
 
     try {
-      orderedProducts.forEach(async (orderedProduct) => {
-        const { product, quantity } = orderedProduct;
+      await Promise.allSettled(
+        orderedProducts.map(async (orderedProduct) => {
+          const { product, quantity } = orderedProduct;
 
-        const updated = await this.productModel.findOneAndUpdate(
-          {
-            _id: product as Types.ObjectId,
-            stock: { $gte: quantity },
-          },
-          {
-            $inc: { stock: -quantity },
-          },
-          {
-            new: true,
-          },
-        );
+          const updated = await this.productModel.findOneAndUpdate(
+            {
+              _id: product as Types.ObjectId,
+              stock: { $gte: quantity },
+            },
+            {
+              $inc: { stock: -quantity },
+            },
+            {
+              new: true,
+            },
+          );
 
-        if (!updated) throw new Error(`No product or out of stock: ${product}`);
-      });
+          if (!updated)
+            throw new Error(`No product or out of stock: ${product}`);
+        }),
+      );
+
+      await session.commitTransaction();
     } catch (e) {
       await session.abortTransaction();
       throw e;

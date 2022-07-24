@@ -56,8 +56,8 @@ export class OrderService {
       if (status === OrderStatus.COMPLETED) {
         const order = await this.getOrderById(orderId);
         if (!order) throw new Error(`No order with ID ${orderId}`);
-
-        await this.productService.consumeProductStock(order.products);
+        if (order.status !== OrderStatus.COMPLETED)
+          await this.productService.consumeProductStock(order.products);
       }
       return this.orderRepository.updateOrder(orderId, updateOrderDto);
     } catch (e) {
