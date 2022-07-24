@@ -8,6 +8,7 @@ import { CategoryModule } from './category/category.module';
 import { OrderModule } from './order/order.module';
 import { CommentModule } from './comment/comment.module';
 import { AdminModule } from './admin/admin.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AdminModule } from './admin/admin.module';
     CategoryModule,
     OrderModule,
     CommentModule,
+    AuthModule,
     AdminModule,
   ],
   controllers: [AppController],
