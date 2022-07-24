@@ -8,22 +8,22 @@ export class Product {
   @ApiProperty({ type: String })
   _id: Types.ObjectId;
 
-  @prop()
+  @prop({ required: true })
   name: string;
 
-  @prop({ type: Types.Decimal128 })
+  @prop({ required: true })
   price: number;
 
-  @prop()
+  @prop({ required: true })
   stock: number;
 
   // TODO: Use ref to Category
-  @prop({ ref: () => Category, type: Types.ObjectId })
+  @prop({ required: true, ref: () => Category, type: Types.ObjectId })
   category: Ref<Category, Types.ObjectId>;
 
-  @prop({ enum: ProductStatus })
+  @prop({ required: true, enum: ProductStatus })
   status: ProductStatus;
 
-  @prop()
+  @prop({ required: true })
   image: string;
 }

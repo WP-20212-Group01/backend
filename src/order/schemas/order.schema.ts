@@ -36,6 +36,7 @@ export class Order {
   @prop()
   orderDate?: Date;
 
-  @prop({ required: true, type: () => OrderProduct, _id: false })
+  @prop({ required: true, type: () => OrderProduct, default: [], _id: false })
+  // products: Types.Array<OrderProduct>;
   products: Types.Array<OrderProduct>;
 }

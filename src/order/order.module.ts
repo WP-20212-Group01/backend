@@ -10,5 +10,6 @@ import { OrderService } from './order.service';
   imports: [DatabaseModule, ProductModule],
   controllers: [OrderController],
   providers: [OrderService, OrderRepository, ...orderProviders],
+  exports: [OrderService],
 })
 export class OrderModule {}

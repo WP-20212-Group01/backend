@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
-import { Category } from 'src/category/schemas/category.schema';
+import { Category } from '../category/schemas/category.schema';
+import { AddProductDto } from './dtos/add-product.dto';
 import { ProductFilterDto } from './dtos/product-filter.dto';
 import { Product } from './schemas/product.schema';
 
@@ -81,5 +82,15 @@ export class ProductRepository {
       })
       .lean()
       .exec();
+  }
+
+  async addProduct(
+    addProductDto: AddProductDto,
+    category: Types.ObjectId,
+  ): Promise<Product> {
+    return this.productModel.create({
+      ...addProductDto,
+      category,
+    });
   }
 }

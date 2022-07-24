@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ProductService } from '../product/product.service';
 import { CreateOrderDto } from './dtos/create-order.dto';
+import { GetOrderDto } from './dtos/get-order.dto';
+import { UpdateOrderDto } from './dtos/update-order.dto';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -37,5 +39,17 @@ export class OrderService {
     });
 
     return this.orderRepository.createOrder(createOrderDto);
+  }
+
+  async getOrders(getOrderDto: GetOrderDto) {
+    return this.orderRepository.getOrders(getOrderDto);
+  }
+
+  async getOrderById(orderId: string) {
+    return this.orderRepository.getOrderById(orderId);
+  }
+
+  async updateOrder(orderId: string, updateOrderDto: UpdateOrderDto) {
+    return this.orderRepository.updateOrder(orderId, updateOrderDto);
   }
 }

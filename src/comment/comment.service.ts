@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ProductService } from 'src/product/product.service';
+import { ProductService } from '../product/product.service';
 import { CommentRepository } from './comment.repository';
 import { CreateCommentDto } from './dtos/create-comment.dto';
 import { GetCommentDto } from './dtos/get-comment.dto';

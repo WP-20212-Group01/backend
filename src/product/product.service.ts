@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CategoryService } from '../category/category.service';
+import { AddProductDto } from './dtos/add-product.dto';
 import { ProductFilterDto } from './dtos/product-filter.dto';
 import { ProductRepository } from './product.repository';
 
@@ -31,5 +32,19 @@ export class ProductService {
 
   async getProductsByIdList(idList: string[]) {
     return this.productRepository.getProductsByIdList(idList);
+  }
+
+  async addProduct(addProductDto: AddProductDto) {
+    const { category } = addProductDto;
+    const categoryList = await this.categoryService.getCategoriesBySlugs([
+      category,
+    ]);
+    if (!categoryList?.length) {
+      throw new BadRequestException(`Invalid category with slug ${category}`);
+    }
+    return this.productRepository.addProduct(
+      addProductDto,
+      categoryList[0]._id,
+    );
   }
 }
